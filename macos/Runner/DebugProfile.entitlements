@@ -8,5 +8,8 @@
 	<true/>
 	<key>com.apple.security.network.server</key>
 	<true/>
+	<!-- Outbound network so the WebView can load sites (the user's browsing). -->
+	<key>com.apple.security.network.client</key>
+	<true/>
 </dict>
 </plist>
