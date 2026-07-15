@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
+import 'panic_service.dart';
+
 /// Central privacy configuration for every [InAppWebView] in the app.
 ///
 /// The guiding principle (see PROMPT.md §10) is *privacy above convenience*:
@@ -59,17 +61,20 @@ class PrivacyConfig {
 /// Note (GitHub #511/#1532): incognito profile isolation has known bugs on
 /// macOS/Windows, so we always clear these explicitly rather than trusting the
 /// incognito flag alone.
-class InAppWebViewPrivacyCleaner {
+class InAppWebViewPrivacyCleaner implements PrivacyCleaner {
   const InAppWebViewPrivacyCleaner();
 
+  @override
   Future<void> deleteAllCookies() async {
     await CookieManager.instance().deleteAllCookies();
   }
 
+  @override
   Future<void> clearAllCache() async {
     await InAppWebViewController.clearAllCache();
   }
 
+  @override
   Future<void> deleteWebStorage() async {
     await WebStorageManager.instance().deleteAllData();
   }
