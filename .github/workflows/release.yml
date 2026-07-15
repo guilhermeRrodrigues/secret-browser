@@ -49,7 +49,9 @@ jobs:
           path: dist/*.apk
 
   windows:
-    runs-on: windows-latest
+    # Pinned to windows-2022 (VS 2022) — windows-latest ships bleeding-edge VS/MSVC
+    # that hard-errors on the plugin's <experimental/coroutine> usage.
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
