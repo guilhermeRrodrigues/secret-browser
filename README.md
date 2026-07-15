@@ -18,6 +18,15 @@ with Flutter. One code base, three pillars:
 > **not** a VPN. Network-level anonymity (hiding your IP) is on the
 > [roadmap](#roadmap--out-of-scope), not implemented yet.
 
+## Downloads
+
+Prebuilt binaries for **Android, Windows, macOS and iPhone** are attached to
+each [GitHub Release](https://github.com/guilhermeRrodrigues/secret-browser/releases).
+See **[docs/INSTALL.md](docs/INSTALL.md)** for per-platform install steps and
+caveats (macOS Gatekeeper, Windows WebView2 runtime, iOS sideloading). Builds are
+produced automatically by [`.github/workflows/release.yml`](.github/workflows/release.yml)
+on each `v*` tag.
+
 ---
 
 ## How the privacy guarantees work

@@ -1,0 +1,136 @@
+name: Release
+
+# Builds Secret Browser for all four platforms on their native runners and
+# publishes a GitHub Release with the downloadable artifacts.
+#
+# - Push a tag like `v1.0.0`  -> builds everything AND publishes the Release.
+# - Run manually (workflow_dispatch) -> builds everything as a dry run, no publish.
+#
+# Windows can only be built on a Windows runner (Flutter has no cross-compile),
+# which is why this pipeline exists. iOS is shipped UNSIGNED for sideloading.
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write # required for the release job to create the GitHub Release
+
+env:
+  FLUTTER_VERSION: '3.44.0'
+  # Tag name on a tag push (e.g. v1.0.0); branch name on a manual dispatch.
+  VER: ${{ github.ref_name }}
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build apk --release
+      - name: Package APK
+        run: |
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-release.apk "dist/SecretBrowser-${VER}-android.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: dist/*.apk
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build windows --release
+      - name: Package Windows zip
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath "dist/SecretBrowser-$env:VER-windows-x64.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/*.zip
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter build macos --release
+      - name: Package macOS zip (unsigned)
+        run: |
+          mkdir -p dist
+          APP=$(find build/macos/Build/Products/Release -maxdepth 1 -name '*.app' | head -1)
+          echo "Zipping $APP"
+          ditto -c -k --keepParent "$APP" "dist/SecretBrowser-${VER}-macos.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: dist/*.zip
+
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      # Unsigned build: users re-sign on their own device (AltStore/Sideloadly).
+      - run: flutter build ios --release --no-codesign
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p dist Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/Runner.app
+          zip -qry "dist/SecretBrowser-${VER}-ios-unsigned.ipa" Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios
+          path: dist/*.ipa
+
+  release:
+    needs: [android, windows, macos, ios]
+    runs-on: ubuntu-latest
+    # Only publish a Release when a tag was pushed; manual runs are dry runs.
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Collect assets
+        run: |
+          mkdir -p dist
+          find artifacts -type f \( -name '*.apk' -o -name '*.zip' -o -name '*.ipa' \) -exec cp {} dist/ \;
+          ls -la dist
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          body_path: docs/INSTALL.md
+          fail_on_unmatched_files: true
