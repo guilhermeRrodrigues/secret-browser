@@ -23,9 +23,11 @@ with Flutter. One code base, three pillars:
 Prebuilt binaries for **Android, Windows, macOS and iPhone** are attached to
 each [GitHub Release](https://github.com/guilhermeRrodrigues/secret-browser/releases).
 See **[docs/INSTALL.md](docs/INSTALL.md)** for per-platform install steps and
-caveats (macOS Gatekeeper, Windows WebView2 runtime, iOS sideloading). Builds are
-produced automatically by [`.github/workflows/release.yml`](.github/workflows/release.yml)
-on each `v*` tag.
+caveats. In short: the builds are **unsigned**, so macOS Gatekeeper needs a
+right-click→Open, Windows 11 **Smart App Control** may block the `.exe` with a
+`0xC0E90002` "Bad Image" error (it's unsigned — the doc explains how to run it), and
+iOS is sideload-only. Builds are produced automatically by
+[`.github/workflows/release.yml`](.github/workflows/release.yml) on each `v*` tag.
 
 ---
 

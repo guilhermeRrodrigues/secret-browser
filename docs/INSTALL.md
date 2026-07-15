@@ -23,14 +23,39 @@ Baixe o arquivo da sua plataforma nos **assets** abaixo e siga as instruções.
 
 ## 🪟 Windows (.zip)
 
-1. Baixe e **extraia** o `.zip` em uma pasta.
-2. Execute **`secret_browser.exe`**.
-3. Se a área de navegação ficar **em branco**, instale o
+1. **Antes de extrair**: clique com o botão direito no `.zip` baixado →
+   **Propriedades** → marque **Desbloquear** → **OK**. Isso remove a "marca da web"
+   que faz o Windows desconfiar do arquivo.
+2. **Extraia** o `.zip` em uma pasta.
+3. Execute **`secret_browser.exe`**.
+4. Se a área de navegação ficar **em branco**, instale o
    **[Edge WebView2 Runtime](https://developer.microsoft.com/microsoft-edge/webview2/)**
    (Evergreen Standalone) e abra novamente. O Windows 11 já vem com ele.
 
-> O app não é assinado por editor comercial — o SmartScreen pode avisar. Clique
-> em **Mais informações → Executar assim mesmo**.
+> O runtime do Visual C++ já vai **empacotado** junto do `.exe`, então você não
+> precisa instalar nada para isso.
+
+### ⚠️ Erro "Imagem Incorreta / 0xC0E90002"
+
+Esse erro **não** é bug do app: é o **Smart App Control (SAC)** do Windows 11
+bloqueando um programa **não assinado** (o app não tem certificado de editor
+comercial). O diálogo só tem "OK", sem "Executar assim mesmo" — porque o SAC é mais
+rígido que o SmartScreen.
+
+Como o app é gratuito/open-source e não assinado, para rodar você precisa **desativar
+o Smart App Control**:
+
+1. **Ajustes** → **Privacidade e segurança** → **Segurança do Windows**
+2. **Controle de aplicativo e navegador** → **Configurações do Smart App Control**
+3. Mude para **Desativado**.
+
+> ⚠️ Desativar o Smart App Control é **irreversível** sem reinstalar/resetar o Windows
+> — decida com consciência. Alternativa: se você tiver o SmartScreen (e não o SAC),
+> o aviso azul terá **Mais informações → Executar assim mesmo**.
+>
+> A solução "de verdade" (sem mexer no SAC) exige **assinatura digital paga** do
+> executável ou publicação na **Microsoft Store** — está no roadmap, fora do escopo
+> gratuito atual.
 
 ## 🍎 macOS (.zip)
 
