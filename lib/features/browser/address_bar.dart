@@ -51,6 +51,7 @@ class _AddressBarState extends ConsumerState<AddressBar> {
               _SecurityIcon(tab: tab),
               Expanded(
                 child: TextField(
+                  key: const Key('addressBarField'),
                   controller: _controller,
                   focusNode: _focusNode,
                   textInputAction: TextInputAction.go,

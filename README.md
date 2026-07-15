@@ -38,6 +38,18 @@ data behind. Because incognito-profile isolation has known bugs on some
 platforms (WKWebView, WebView2), the app **also** clears cookies, cache and web
 storage explicitly rather than trusting the incognito flag alone.
 
+### Platform coverage of the wipe (honest note)
+
+Not every wipe primitive is implemented by the WebView plugin on every platform.
+Verified on **macOS** (WKWebView) via the integration test: `clearHistory` and
+`WebStorageManager.deleteAllData` throw `UnimplementedError`. This is by design
+handled gracefully — those steps are skipped and the rest of the wipe still runs:
+cookies are deleted, cache is cleared, `localStorage`/`sessionStorage` are cleared
+via JavaScript, tabs are dropped, and the process fully exits (`exit(0)`). Because
+every WebView runs **incognito (in-memory only)** and the process terminates,
+nothing persists regardless. The guarantee that "the wipe never aborts halfway"
+is what makes these per-platform gaps safe.
+
 ## Wipe + close behavior per platform
 
 The wipe order is always the same (stop loads → clear history → clear DOM

@@ -47,6 +47,7 @@ class _PanicOverlayState extends State<PanicOverlay> {
               left: pos.dx,
               top: pos.dy,
               child: PanicButton(
+                key: const Key('panicButton'),
                 size: _buttonSize,
                 onPanic: widget.onPanic,
                 onDrag: (delta) => setState(() => _position = pos + delta),
