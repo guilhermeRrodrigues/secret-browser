@@ -46,3 +46,6 @@ app.*.map.json
 
 # Claude Code tooling state (agent memory, plans, local settings)
 .claude/
+
+# Android Gradle build output
+android/build/

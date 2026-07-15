@@ -109,9 +109,13 @@ class _StartPageState extends State<_StartPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.shield_moon,
-                  size: 64, color: theme.colorScheme.primary),
-              const SizedBox(height: 16),
+              Image.asset(
+                'assets/branding/icon_foreground.png',
+                width: 96,
+                height: 96,
+                filterQuality: FilterQuality.medium,
+              ),
+              const SizedBox(height: 12),
               Text('Secret Browser', style: theme.textTheme.headlineSmall),
               const SizedBox(height: 8),
               const AnonymousBadge(),
