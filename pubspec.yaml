@@ -1,5 +1,5 @@
 name: secret_browser
-description: "A new Flutter project."
+description: "Secret Browser — a privacy-first, cross-platform browser with instant wipe + close."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -34,6 +34,16 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+
+  # Cross-platform WebView (Android/iOS/macOS/Windows) with fine-grained
+  # cookie/cache control and incognito support — the only backend that covers
+  # all four target platforms. See README for the privacy rationale.
+  flutter_inappwebview: ^6.1.5
+
+  # State management. Chosen over provider for testability; no loose global
+  # mutable state. NOTE: this app carries zero analytics/telemetry/crash
+  # reporting by design — the only network traffic is the user's own browsing.
+  flutter_riverpod: ^3.3.2
 
 dev_dependencies:
   flutter_test:
